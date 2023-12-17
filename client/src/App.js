@@ -18,7 +18,7 @@ function App() {
     <Header />
     <Routes>
       <Route path="/" element={<Courses />} />
-      <Route path="/courses/:id" element={<CourseDetail />} />
+      
       <Route path="/courses/:id/update" element={<UpdateCourse />} />
       <Route path="/courses/create" element={<CreateCourse />} />
       <Route path="/error" element={<UnhandledError />} />
