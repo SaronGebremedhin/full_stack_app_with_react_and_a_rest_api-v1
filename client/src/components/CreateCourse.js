@@ -1,5 +1,5 @@
 import React, { useState, useContext, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { api }from '../utilities/apiHelper';
 import ErrorsDisplay from './ErrorsDisplay';
 import UserContext from '../context/UserContext';
