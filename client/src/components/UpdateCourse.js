@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import api from '../utilities/apiHelper';
+import { api } from '../utilities/apiHelper';
 
 const UpdateCourse = () => {
   const [course, setCourse] = useState({
@@ -9,7 +9,7 @@ const UpdateCourse = () => {
     estimatedTime: '',
     materialsNeeded: '',
   });
-  const [errors, setErrors] = useState([]);
+   const [errors, setErrors] = useState([]);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -27,10 +27,10 @@ const UpdateCourse = () => {
     fetchCourseDetail();
   }, [id, navigate]);
 
-  const handleChange = (e) => {
+  /*const handleChange = (e) => {
     setCourse({ ...course, [e.target.name]: e.target.value });
   };
-
+*/
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -51,7 +51,7 @@ const UpdateCourse = () => {
     <div>
       <h2>Update Course</h2>
       <form onSubmit={handleSubmit}>
-        {/* ...form fields */}
+        {}
         <button type="submit">Update Course</button>
         <Link to={`/courses/${id}`}>Cancel</Link>
       </form>
