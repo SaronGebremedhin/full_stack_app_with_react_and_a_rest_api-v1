@@ -6,7 +6,7 @@ import { UserProvider, useUser } from '../context/UserContext.js';
 
 function UserSignUp() {
   // Accessing user context and actions
-  const { actions } = useContext(UserContext);
+  const { actions } = useUser();
 
   // State for handling validation errors
   const [errors, setErrors] = useState([]);
