@@ -1,9 +1,9 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
-import "./App.css";
-import "./styles/reset.css"
-import "./styles/global.css";
+import './App.css';
+import './styles/reset.css'
+import './styles/global.css'
 
 import Header from "./components/Header";
 import Courses from "./components/Courses";

@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams, Link, Navigate, useNavigate } from 'react-router-dom';
 
-import {UserContext} from '../context/UserContext.js';
+import { useUser } from '../context/UserContext';
 import ErrorsDisplay from './ErrorsDisplay.js';
 
 const CourseDetail = () => {
-  const { user } = useContext(UserContext);
+  const { user } = useUser ();
   const { id } = useParams();
   const navigate = useNavigate();
 

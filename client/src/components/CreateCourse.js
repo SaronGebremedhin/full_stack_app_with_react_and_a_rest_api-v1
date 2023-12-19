@@ -1,10 +1,10 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import UserContext from '../context/UserContext.js';
+import { useUser } from '../context/UserContext';
 
 const CreateCourse = () => {
-  const { user } = useContext(UserContext);
+  const { user } = useUser();
   const navigate = useNavigate();
 
   // State for storing form data and validation errors

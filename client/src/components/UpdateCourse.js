@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
-import UserContext from '../context/UserContext.js';
+import { UserProvider, useUser } from '../context/UserContext.js';
 
 const UpdateCourse = () => {
   const { user } = useContext(UserContext);

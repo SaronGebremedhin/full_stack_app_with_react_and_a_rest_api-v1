@@ -1,15 +1,15 @@
-import React, { useRef, useContext, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
-import UserContext from '../context/UserContext.js';
-import ErrorsDisplay from './ErrorsDisplay.js';
+import { useUser } from '../context/UserContext'; // Import useUser, not UserContext
+import ErrorsDisplay from './ErrorsDisplay';
 
 function UserSignIn() {
   // State for handling validation errors
   const [errors, setErrors] = useState([]);
 
-  // Accessing user context and location
-  const { actions } = useContext(UserContext);
+  // Accessing user context and location using useUser
+  const { signIn } = useUser();
   const location = useLocation();
 
   // Refs for form input fields
@@ -25,7 +25,7 @@ function UserSignIn() {
       event.preventDefault();
 
       // Attempt to sign in
-      const user = await actions.signIn({
+      const user = await signIn({
         emailAddress: emailAddress.current.value,
         password: password.current.value,
       });

@@ -2,7 +2,7 @@ import React, { useRef, useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import ErrorsDisplay from './ErrorsDisplay.js';
-import UserContext from '../context/UserContext';
+import { UserProvider, useUser } from '../context/UserContext.js';
 
 function UserSignUp() {
   // Accessing user context and actions
@@ -55,7 +55,7 @@ function UserSignUp() {
     } catch (error) {
       // Handle unexpected errors
       console.log(error);
-      setErrors(['Internal error occurred, try again']);
+      setErrors(['Internal error occurred']);
       navigate('/error');
     }
   };

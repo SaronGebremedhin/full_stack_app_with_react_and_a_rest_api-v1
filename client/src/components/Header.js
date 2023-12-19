@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import UserContext from '../context/UserContext.js';
+import { useUser } from '../context/UserContext';
 
 const Header = () => {
-  const { user } = useContext(UserContext);
+  const { user } = { useUser };
 
   return (
     <div className="header">
