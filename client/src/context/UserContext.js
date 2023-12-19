@@ -1,44 +1,57 @@
-import { useState, createContext } from "react";
-import Cookies from "js-cookie";
-import { api } from '../utilities/apiHelper';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const UserContext = createContext(null);
+const UserContext = createContext();
 
-export const UserProvider = (props) => {
-  const cookie = Cookies.get("authenticatedUser");
-  const [authUser, setAuthUser] = useState(cookie ? JSON.parse(cookie) : null);
-  const signIn = async (credentials) => {
-    const response = await api("/users", "GET", null, credentials)
-    if (response.status === 200){
-      const user = await response.json();
-      user.password = credentials.password;
-      console.log(user)
-      setAuthUser(user);
-      Cookies.set("authenticatedUser",JSON.stringify(user),{expires: 1});
-      console.log(` ${user.emailAddress} is signed in`)
-      return user
-    } else if (response.status === 401){
-     return null
-    }else{
-      throw new Error();
+export const UserProvider = ({ children }) => {
+  const [authenticatedUser, setAuthenticatedUser] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('authenticatedUser');
+    if (storedUser) {
+      setAuthenticatedUser(JSON.parse(storedUser));
     }
-  }
+  }, []);
+
+  const signIn = async (email, password) => {
+    try {
+      const response = await fetch('http://localhost:5000/api/users', {
+        method: 'GET',
+        headers: {
+          Authorization: `Basic ${btoa(`${email}:${password}`)}`,
+        },
+      });
+
+      if (response.status === 200) {
+        const user = await response.json();
+        setAuthenticatedUser(user);
+        localStorage.setItem('authenticatedUser', JSON.stringify(user));
+        navigate('/');
+      } else {
+        throw new Error('Authentication failed');
+      }
+    } catch (error) {
+      console.error('Error during sign-in:', error);
+      throw error;
+    }
+  };
+
   const signOut = () => {
-    setAuthUser(null);
-    Cookies.remove("authenticatedUser");
-  }
+    setAuthenticatedUser(null);
+    localStorage.removeItem('authenticatedUser');
+    navigate('/');
+  };
 
   return (
-    <UserContext.Provider value={{
-      authUser,
-      actions:{
-        signIn,
-        signOut
-      }
-    }}>
-      {props.children}
+    <UserContext.Provider value={{ authenticatedUser, signIn, signOut }}>
+      {children}
     </UserContext.Provider>
   );
-}
+};
 
-export default UserContext;
+const useUser = () => {
+  return useContext(UserContext);
+};
+
+export { UserProvider, useUser };

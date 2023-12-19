@@ -1,74 +1,85 @@
-import React, { useState, useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import UserContext from '../context/UserContext';
-import ErrorsDisplay from './ErrorsDisplay';
-import { api } from '../utilities/apiHelper';
+import React, { useRef, useContext, useState } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
-const UserSignIn = () => {
-  const [credentials, setCredentials] = useState({
-    emailAddress: '',
-    password: '',
-  });
+import UserContext from '../context/UserContext.js';
+import ErrorsDisplay from './ErrorsDisplay.js';
+
+function UserSignIn() {
+  // State for handling validation errors
   const [errors, setErrors] = useState([]);
-  const { signIn } = useContext(UserContext);
+
+  // Accessing user context and location
+  const { actions } = useContext(UserContext);
+  const location = useLocation();
+
+  // Refs for form input fields
+  const emailAddress = useRef(null);
+  const password = useRef(null);
+
+  // Hook for navigation
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setCredentials({ ...credentials, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  // Event handler for form submission
+  const handleSubmit = async (event) => {
     try {
-      const response = await signIn(credentials.emailAddress, credentials.password);
-      navigate('/');
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        console.error('Invalid email address or password:', error.message);
-        setErrors(['Invalid email address or password']);
-      } else {
-        console.error('Error signing in:', error);
-        navigate('/error');
+      event.preventDefault();
+
+      // Attempt to sign in
+      const user = await actions.signIn({
+        emailAddress: emailAddress.current.value,
+        password: password.current.value,
+      });
+
+      // Determine where to navigate based on the location state
+      let from = '/';
+      if (location.state) {
+        from = location.state.from;
       }
+
+      // If sign in is successful, navigate to the specified location
+      if (user) {
+        navigate(from);
+      } else {
+        // If sign in fails, set validation errors
+        setErrors(['Login failed']);
+      }
+    } catch (error) {
+      // Handle unexpected errors
+      navigate('/error');
     }
   };
 
+  // Event handler for cancel button
+  const handleCancel = (event) => {
+    event.preventDefault();
+    navigate('/');
+  };
+
   return (
-    <main>
-      <div className="form--centered">
-        <h2>Sign In</h2>
+    <div className="form--centered">
+      <h2>Sign In</h2>
+
+      <div className="validation--errors">
         <ErrorsDisplay errors={errors} />
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="emailAddress">Email Address</label>
-          <input
-            id="emailAddress"
-            name="emailAddress"
-            type="email"
-            value={credentials.emailAddress}
-            onChange={handleChange}
-          />
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            value={credentials.password}
-            onChange={handleChange}
-          />
-          <button className="button" type="submit">
-            Sign In
-          </button>
-          <Link to="/" className="button button-secondary">
-            Cancel
-          </Link>
-        </form>
-        <p>
-          Don't have a user account? <Link to="/signup">Click here</Link> to sign up!
-        </p>
       </div>
-    </main>
+
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="emailAddress">Email Address</label>
+        <input id="emailAddress" name="emailAddress" type="email" ref={emailAddress} />
+        <label htmlFor="password">Password</label>
+        <input id="password" name="password" type="password" ref={password} />
+        <button className="button" type="submit">
+          Sign In
+        </button>
+        <button className="button button-secondary" onClick={handleCancel}>
+          Cancel
+        </button>
+      </form>
+      <p>
+        Don't have a user account? Click here to <Link to="/signup">sign up</Link>!
+      </p>
+    </div>
   );
-};
+}
 
 export default UserSignIn;

@@ -14,7 +14,7 @@ const app = express();
 
 app.use(express.json());
 
-app.use(cors());
+app.use(cors({origin: 'http://localhost:3000'}))
 
 // setup morgan which gives us http request logging
 app.use(morgan('dev'));
@@ -62,6 +62,6 @@ app.use((err, req, res, next) => {
 app.set('port', process.env.PORT || 5000);
 
 // start listening on our port
-const server = app.listen(app.get('port'), () => {
+const server = app.listen(app.get('pornt'), () => {
   console.log(`Express server is listening on port ${server.address().port}`);
 });

@@ -1,89 +1,122 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import Markdown from 'react-markdown';
+import React, { useEffect, useState, useContext } from 'react';
+import { useParams, Link, Navigate, useNavigate } from 'react-router-dom';
 
-import UserContext from '../context/UserContext';
-import { api } from '../utilities/apiHelper';
+import {UserContext} from '../context/UserContext.js';
+import ErrorsDisplay from './ErrorsDisplay.js';
 
-function CourseDetail() {
+const CourseDetail = () => {
   const { user } = useContext(UserContext);
-  const [course, setCourse] = useState({});
   const { id } = useParams();
   const navigate = useNavigate();
 
+  // State for storing course details and validation errors
+  const [course, setCourse] = useState({});
+  const [errors, setErrors] = useState([]);
+
+  // Effect hook to fetch the course details on component mount
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const res = await api(`/courses/${id}`, 'GET');
-        const json = await res.json();
-        if (res.status === 200) {
-          setCourse(json);
-        } else if (res.status === 404) {
+        const response = await fetch(`http://localhost:5000/api/courses/${id}`);
+        const data = await response.json();
+
+        // If course is not found, navigate to notfound route
+        if (response.status === 404) {
           navigate('/notfound');
         } else {
-          throw new Error();
+          setCourse(data);
         }
       } catch (error) {
-        console.error("Sorry. Unable to fetch the data. Try again later.", error);
-        navigate('/error');
+        console.error('Error fetching course details:', error);
       }
     };
+
     fetchCourse();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, navigate]);
 
-  const handleDelete = () => {
-    api(`/courses/${id}`, 'DELETE', null, { emailAddress: user.emailAddress, password: user.password })
-      .then(() => navigate('/'))
-      .catch(() => navigate('/error'));
+  // Function to handle course deletion
+  const handleDelete = async () => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/courses/${id}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Basic ${btoa(`${user.emailAddress}:${user.password}`)}`,
+        },
+      });
+
+      // If the deletion is successful, navigate to the homepage
+      if (response.status === 204) {
+        navigate('/');
+      } else if (response.status === 403) {
+        // If user is not authorized to delete, navigate to forbidden route
+        navigate('/forbidden');
+      } else if (response.status === 404) {
+        // If the course is not found, navigate to notfound route
+        navigate('/notfound');
+      } else {
+        // If an unexpected error occurs, navigate to the error route
+        navigate('/error');
+      }
+    } catch (error) {
+      console.error('Error deleting course:', error);
+    }
   };
 
   return (
-    <main>
+    <div>
       <div className="actions--bar">
-        <div className="wrap">
-          {user && user?.id === course?.user?.id ? (
-            <>
-              <Link className="button" to={`/courses/${id}/update`}>
-                Update Course
-              </Link>
-              <button className="button" onClick={handleDelete}>
-                Delete Course
-              </button>
-            </>
-          ) : null}
-          <Link className="button button-secondary" to="/">
-            Return to List
-          </Link>
+        <div className="bounds">
+          <div className="grid-100">
+            {user && user.id === course.userId && (
+              <span>
+                <Link className="button" to={`/courses/${id}/update`}>
+                  Update Course
+                </Link>
+                <button className="button" onClick={handleDelete}>
+                  Delete Course
+                </button>
+              </span>
+            )}
+            <Link className="button button-secondary" to="/">
+              Return to List
+            </Link>
+          </div>
         </div>
       </div>
-
-      <div className="wrap">
-        <h2>Course Detail</h2>
-        <form>
-          <div className="main--flex">
-            <div>
-              <h3 className="course--detail--title">Course</h3>
-              <h4 className="course--name">{course.title}</h4>
-              <p>
-                {course?.user?.firstName} {course?.user?.lastName}
-              </p>
-
-              <Markdown>{course.description}</Markdown>
-            </div>
-            <div>
-              <h3 className="course--detail--title">Estimated Time</h3>
-              <p>{course.estimatedTime || 'Ask instructor'}</p>
-
-              <h3 className="course--detail--title">Materials Needed</h3>
-              <ul className="course--detail--list">
-                <Markdown>{course.materialsNeeded}</Markdown>
-              </ul>
-            </div>
+      <div className="bounds course--detail">
+        <div className="grid-66">
+          <div className="course--header">
+            <h4 className="course--label">Course</h4>
+            <h3 className="course--title">{course.title}</h3>
+            <p>
+              By {course.user ? `${course.user.firstName} ${course.user.lastName}` : 'Unknown User'}
+            </p>
           </div>
-        </form>
+          <div className="course--description">
+            <p>{course.description}</p>
+          </div>
+        </div>
+        <div className="grid-25 grid-right">
+          <div className="course--stats">
+            <ul className="course--stats--list">
+              <li className="course--stats--list--item">
+                <h4>Estimated Time</h4>
+                <h3>{course.estimatedTime || 'N/A'}</h3>
+              </li>
+              <li className="course--stats--list--item">
+                <h4>Materials Needed</h4>
+                <ul>
+                  <p>{course.materialsNeeded || 'N/A'}</p>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
-    </main>
+    </div>
   );
-}
+};
 
 export default CourseDetail;

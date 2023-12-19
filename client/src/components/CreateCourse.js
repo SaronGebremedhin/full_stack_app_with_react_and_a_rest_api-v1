@@ -1,118 +1,136 @@
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { api }from '../utilities/apiHelper';
-import ErrorsDisplay from './ErrorsDisplay';
-import UserContext from '../context/UserContext';
+
+import UserContext from '../context/UserContext.js';
 
 const CreateCourse = () => {
-  const [course, setCourse] = useState({
+  const { user } = useContext(UserContext);
+  const navigate = useNavigate();
+
+  // State for storing form data and validation errors
+  const [formData, setFormData] = useState({
     title: '',
     description: '',
     estimatedTime: '',
     materialsNeeded: '',
   });
   const [errors, setErrors] = useState([]);
-  const { user } = useContext(UserContext);
-  const navigate = useNavigate();
 
- 
-  const titleRef = useRef(null);
-  const descriptionRef = useRef(null);
-  const estimatedTimeRef = useRef(null);
-  const materialsNeededRef = useRef(null);
-
+  // Function to handle form data changes
   const handleChange = (e) => {
-    setCourse({ ...course, [e.target.name]: e.target.value });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
- 
-    if (!course.title || !course.description) {
-      setErrors([
-        { message: "Please provide a value for 'Title'" },
-        { message: "Please provide a value for 'Description'" },
-      ]);
-      return;
-    }
-
     try {
-      const response = await api.post('/courses', course);
-      navigate(`/courses/${response.data.id}`);
-    } catch (error) {
-      if (error.response && error.response.status === 400) {
-        setErrors(error.response.data.errors);
+      const response = await fetch('http://localhost:5000/api/courses', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Basic ${btoa(`${user.emailAddress}:${user.password}`)}`,
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.status === 201) {
+        // If course creation is successful, navigate to the homepage
+        navigate('/');
+      } else if (response.status === 400) {
+        // If there are validation errors, set the errors state
+        const data = await response.json();
+        setErrors(data.errors);
       } else {
-        console.error('Error creating course:', error);
+        // If an unexpected error occurs, navigate to the error route
         navigate('/error');
       }
+    } catch (error) {
+      console.error('Error creating course:', error);
     }
   };
 
-  const handleCancel = (e) => {
-    e.preventDefault();
+  // Function to handle cancel button click
+  const handleCancel = () => {
     navigate('/');
   };
 
   return (
-    <div className="wrap">
-      <h2>Create Course</h2>
-      <div className="validation--errors">
-        <ErrorsDisplay errors={errors} />
+    <div className="bounds course--detail">
+      <h1>Create Course</h1>
+      <div>
+        <form onSubmit={handleSubmit}>
+          <div className="grid-66">
+            <div className="course--header">
+              <h4 className="course--label">Course</h4>
+              <div>
+                <input
+                  id="title"
+                  name="title"
+                  type="text"
+                  placeholder="Course title..."
+                  value={formData.title}
+                  onChange={handleChange}
+                />
+              </div>
+              <p>
+                By {user ? `${user.firstName} ${user.lastName}` : 'Unknown User'}
+              </p>
+            </div>
+            <div className="course--description">
+              <div>
+                <textarea
+                  id="description"
+                  name="description"
+                  placeholder="Course description..."
+                  value={formData.description}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="grid-25 grid-right">
+            <div className="course--stats">
+              <ul className="course--stats--list">
+                <li className="course--stats--list--item">
+                  <h4>Estimated Time</h4>
+                  <div>
+                    <input
+                      id="estimatedTime"
+                      name="estimatedTime"
+                      type="text"
+                      placeholder="Hours"
+                      value={formData.estimatedTime}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </li>
+                <li className="course--stats--list--item">
+                  <h4>Materials Needed</h4>
+                  <div>
+                    <textarea
+                      id="materialsNeeded"
+                      name="materialsNeeded"
+                      placeholder="List materials..."
+                      value={formData.materialsNeeded}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div className="grid-100 pad-bottom">
+            <button className="button" type="submit">
+              Create Course
+            </button>
+            <button className="button button-secondary" onClick={handleCancel}>
+              Cancel
+            </button>
+          </div>
+        </form>
       </div>
-      <form onSubmit={handleSubmit}>
-        <div className="main--flex">
-          <div>
-            <label htmlFor="title">Course Title</label>
-            <input
-              id="title"
-              name="title"
-              type="text"
-              onChange={handleChange}
-              value={course.title}
-              ref={titleRef}
-            />
-
-            <p>By {user.firstName} {user.lastName}</p>
-
-            <label htmlFor="description">Course Description</label>
-            <textarea
-              id="description"
-              name="description"
-              onChange={handleChange}
-              value={course.description}
-              ref={descriptionRef}
-            ></textarea>
-          </div>
-          <div>
-            <label htmlFor="estimatedTime">Estimated Time</label>
-            <input
-              id="estimatedTime"
-              name="estimatedTime"
-              type="text"
-              onChange={handleChange}
-              value={course.estimatedTime}
-              ref={estimatedTimeRef}
-            />
-
-            <label htmlFor="materialsNeeded">Materials Needed</label>
-            <textarea
-              id="materialsNeeded"
-              name="materialsNeeded"
-              onChange={handleChange}
-              value={course.materialsNeeded}
-              ref={materialsNeededRef}
-            ></textarea>
-          </div>
-        </div>
-        <button className="button" type="submit">
-          Create Course
-        </button>
-        <button className="button button-secondary" onClick={handleCancel}>
-          Cancel
-        </button>
-      </form>
     </div>
   );
 };
