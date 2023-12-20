@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useUser } from '../context/UserContext';
+import { api } from '../utilities/apiHelper';
+import ErrorsDisplay from './ErrorsDisplay';
 
 const CreateCourse = () => {
   const { user } = useUser();
@@ -26,7 +28,7 @@ const CreateCourse = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:5000/api/courses', {
+      const response = await fetch('http://localhost:5001/api/courses', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

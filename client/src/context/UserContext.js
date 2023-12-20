@@ -13,7 +13,7 @@ const UserProvider = ({ children }) => {
   const signInUser = async (credentials) => {
     try {
       // Make an API call to authenticate the user
-      const response = await axios.get('http://localhost:5000/api/users', {
+      const response = await axios.get('http://localhost:5001/api/users', {
         auth: {
           username: credentials.emailAddress,
           password: credentials.password,
