@@ -23,7 +23,7 @@ const UserProvider = ({ children }) => {
       if (response.status === 200) {
         // Assuming the API returns the authenticated user object
         const user = response.data;
-       
+        user.password = credentials.password;
         setAuthUser(user);
 
         // Save user data to local storage for persistent authentication
