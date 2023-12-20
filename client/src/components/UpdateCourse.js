@@ -53,7 +53,7 @@ const UpdateCourse = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`http://localhost:5000/api/courses/${id}`, {
+      const response = await fetch(`http://localhost:5001/api/courses/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
