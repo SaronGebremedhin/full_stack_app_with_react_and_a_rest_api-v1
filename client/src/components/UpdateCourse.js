@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useUser } from '../context/UserContext.js';
 
 const UpdateCourse = () => {
-  const { user } = useContext(useUser);
+  const { authUser: user } = useUser();
   const { id } = useParams();
   const navigate = useNavigate();
 
