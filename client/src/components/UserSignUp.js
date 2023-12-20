@@ -7,7 +7,7 @@ import ErrorsDisplay from './ErrorsDisplay';
 
 const UserSignUp = () => {
    // Accessing user context and actions
-    const { actions } = useUser();
+    const { signIn } = useUser();
 
       // Hook for navigation
     const navigate = useNavigate();
