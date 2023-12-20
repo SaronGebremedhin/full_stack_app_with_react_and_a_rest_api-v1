@@ -6,7 +6,7 @@ import ErrorsDisplay from './ErrorsDisplay.js';
 
 
 function CourseDetail () {
-  const { user } = useUser ();
+  const { authUser: user } = useUser();
   const { id } = useParams();
   const navigate = useNavigate();
 
