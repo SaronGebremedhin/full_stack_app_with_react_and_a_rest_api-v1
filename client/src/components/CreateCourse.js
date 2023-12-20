@@ -6,7 +6,7 @@ import { api } from '../utilities/apiHelper';
 import ErrorsDisplay from './ErrorsDisplay';
 
 function CreateCourse () {
-  const { user } = useUser();
+  const { authUser: user } = useUser();
   const navigate = useNavigate();
 
   // State for storing form data and validation errors
