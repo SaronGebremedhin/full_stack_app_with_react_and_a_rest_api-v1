@@ -82,19 +82,22 @@ router.get('/courses', asyncHandler(async (req, res) => {
 
 // GET /api/courses/:id
 router.get(
-  "/courses",
-  asyncHandler(async (req, res) => {
-    const courses = await Course.findAll({
-      order: [["createdAt", "DESC"]],
-      attributes: { exclude: ["createdAt", "updatedAt"] },
-      include: [
-        {
-          model: User,
-          attributes: ["id", "firstName", "lastName", "emailAddress"],
-        },
-      ],
+  '/courses/:id',
+  asyncHandler(async (req, res, next) => {
+    const course = await Course.findByPk(req.params.id, {
+      include: {
+        model: User,
+        attributes: ['firstName', 'lastName', 'emailAddress'],
+      },
+      attributes: { exclude: ['createdAt', 'updatedAt'] },
     });
-    res.status(200).json(courses);
+    if (course) {
+      res.json(course).status(200);
+    } else {
+      const error = new Error('The course was not found');
+      error.status = 404;
+      next(error);
+    }
   })
 );
 
