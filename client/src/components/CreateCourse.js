@@ -15,6 +15,7 @@ function CreateCourse () {
     description: '',
     estimatedTime: '',
     materialsNeeded: '',
+    userId: user.id
   });
   const [errors, setErrors] = useState([]);
 
