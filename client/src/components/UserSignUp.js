@@ -1,99 +1,104 @@
-import React, { useRef, useState, useContext } from 'react';
+import { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { api } from '../utilities/apiHelper';
 
-import ErrorsDisplay from './ErrorsDisplay.js';
-import { UserProvider, useUser } from '../context/UserContext.js';
+import { useUser } from '../context/UserContext';
+import ErrorsDisplay from './ErrorsDisplay';
 
-function UserSignUp() {
-  // Accessing user context and actions
-  const { actions } = useUser();
+const UserSignUp = () => {
+   // Accessing user context and actions
+    const { actions } = useUser();
 
-  // State for handling validation errors
-  const [errors, setErrors] = useState([]);
+      // Hook for navigation
+    const navigate = useNavigate();
 
-  // Refs for form input fields
-  const firstName = useRef(null);
-  const lastName = useRef(null);
-  const emailAddress = useRef(null);
-  const password = useRef(null);
+    // Refs for form input fields
+    const firstName = useRef(null);
+    const lastName = useRef(null);
+    const emailAddress = useRef(null);
+    const password = useRef(null);
+    const [errors, setErrors] = useState([]);
 
-  // Hook for navigation
-  const navigate = useNavigate();
+    // event handlers for form submission
+    const handleSubmit = async (event) => {
+        event.preventDefault();
 
-  // Event handler for form submission
-  const handleSubmit = async (event) => {
-    try {
-      event.preventDefault();
-
-      // Prepare user data for sign-up
-      const data = {
-        firstName: firstName.current.value,
-        lastName: lastName.current.value,
-        emailAddress: emailAddress.current.value,
-        password: password.current.value,
-      };
-
-      // Send request to server to sign up user
-      const res = await actions.signUp(data);
-
-      // Handle response based on status code
-      if (res.status === 201) {
-        console.log(`${data.firstName} ${data.lastName} is successfully signed up and authenticated`);
+        // Send request to server to sign up user
+        const user = {
+            firstName: firstName.current.value,
+            lastName: lastName.current.value,
+            emailAddress: emailAddress.current.value,
+            password: password.current.value
+        }
         
-        // Sign in the user after successful sign-up
-        await actions.signIn(data.emailAddress, data.password);
-        
-        // Navigate back to the homepage
-        navigate('/');
-      } else if (res.status === 400) {
-        // Set validation errors if sign-up fails
-        const data = await res.json();
-        setErrors(data.errors);
-      } else {
-        throw new Error();
-      }
-    } catch (error) {
-      // Handle unexpected errors
-      console.log(error);
-      setErrors(['Internal error occurred']);
-      navigate('/error');
+        try {
+            const response = await api("/users", "POST", user);
+            if (response.status === 201) {
+                console.log(`${user.firstName} ${user.lastName} is successfully signed up and authenticated!`)
+                await actions.signIn(user);
+                navigate('/');
+            } else if (response.status === 400) {
+                const data = await response.json();
+                setErrors(data.errors);
+            } else {
+                throw new Error();
+            }
+        } catch (error) {
+            console.log(error);
+            navigate('/error');
+        }
+
     }
-  };
+// Event handler for cancel button
+    const handleCancel = (event) => {
+        event.preventDefault();
+        navigate('/');
+    }
 
-  // Event handler for cancel button
-  const handleCancel = (event) => {
-    event.preventDefault();
-    navigate('/');
-  };
+    return (
+        <main>
+            <div className="form--centered">
+                <h2>Sign Up</h2>
+                <ErrorsDisplay errors={errors} />
+                <form onSubmit={handleSubmit}>
+                    <label htmlFor="firstName">First Name</label>
+                    <input
+                        id="firstName"
+                        name="firstName"
+                        type="text"
+                        ref={firstName}
+                        placeholder="First Name"
+                    />
+                    <label htmlFor="lastName">Last Name</label>
+                    <input
+                        id="lastName"
+                        name="lastName"
+                        type="text"
+                        ref={lastName}
+                        placeholder="Last Name"
+                    />
+                    <label htmlFor="emailAddress">Email Address</label>
+                    <input
+                        id="emailAddress"
+                        name="emailAddress"
+                        type="email"
+                        ref={emailAddress}
+                        placeholder="Email Address"
+                    />
+                    <label htmlFor="password">Password</label>
+                    <input
+                        id="password"
+                        name="password"
+                        type="password"
+                        ref={password}
+                        placeholder="Password"
+                    />
+                    <button className="button" type="submit">Sign Up</button><button className="button button-secondary" onClick={handleCancel}>Cancel</button>
+                </form>
+                <p>Already have a user account? Click here to <Link to="/signin">sign in</Link>!</p>
+            </div>
+        </main>
+    );
+};
 
-  return (
-    <div className="form--centered">
-      <h2>Sign Up</h2>
-      <div className="validation--errors">
-        <ErrorsDisplay errors={errors} />
-      </div>
-
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="firstName">First Name</label>
-        <input id="firstName" name="firstName" type="text" ref={firstName} />
-        <label htmlFor="lastName">Last Name</label>
-        <input id="lastName" name="lastName" type="text" ref={lastName} />
-        <label htmlFor="emailAddress">Email Address</label>
-        <input id="emailAddress" name="emailAddress" type="email" ref={emailAddress} />
-        <label htmlFor="password">Password</label>
-        <input id="password" name="password" type="password" ref={password} />
-        <button className="button" type="submit">
-          Sign Up
-        </button>
-        <button className="button button-secondary" onClick={handleCancel}>
-          Cancel
-        </button>
-      </form>
-      <p>
-        Already have a user account? Click here to <Link to="/signin">sign in</Link>!
-      </p>
-    </div>
-  );
-}
-
-export default UserSignUp;
+export default UserSignUp; 

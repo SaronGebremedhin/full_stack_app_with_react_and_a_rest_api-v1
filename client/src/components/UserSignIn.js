@@ -57,9 +57,9 @@ function UserSignIn() {
 
   return (
     <div className="form--centered">
-      <h2>Sign In</h2>
+      <h1>Sign In</h1>
 
-      <div className="validation--errors">
+      <div className="Sign In">
         <ErrorsDisplay errors={errors} />
       </div>
 

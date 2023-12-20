@@ -2,6 +2,9 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import './App.css';
+import "./styles/reset.css"
+import "./styles/global.css";
+
 
 import Header from "./components/Header";
 import Courses from "./components/Courses";
@@ -35,7 +38,7 @@ function App() {
         <Route path="/error" element={<UnhandledError />} />
         <Route path="/forbidden" element={<Forbidden />} />
         <Route path="/notfound" element={<NotFound />} />
-        <Route path='*' element={<NotFound />} />
+        <Route path='/*' element={<NotFound />} />
       </Routes>
     </div>
   );

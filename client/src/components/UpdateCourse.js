@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
-import { UserProvider, useUser } from '../context/UserContext.js';
+import { useUser } from '../context/UserContext.js';
 
 const UpdateCourse = () => {
-  const { user } = useContext(UserContext);
+  const { user } = useContext(useUser);
   const { id } = useParams();
   const navigate = useNavigate();
 

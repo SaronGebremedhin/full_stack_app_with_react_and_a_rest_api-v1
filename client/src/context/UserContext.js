@@ -2,37 +2,51 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+import { api } from '../utilities/apiHelper';
+
 const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
-  const [authenticatedUser, setAuthenticatedUser] = useState(null);
+  const [authUser, setAuthUser] = useState(null);
   const navigate = useNavigate();
 
-  const signIn = async (emailAddress, password) => {
+  const signInUser = async (credentials) => {
     try {
       // Make an API call to authenticate the user
-      const response = await axios.post('http://localhost:5000/api/users', {
-        emailAddress,
-        password,
+      const response = await axios.get('http://localhost:5000/api/users', {
+        auth: {
+          username: credentials.emailAddress,
+          password: credentials.password,
+        },
       });
 
-      // Assuming the API returns the authenticated user object
-      setAuthenticatedUser(response.data);
+      if (response.status === 200) {
+        // Assuming the API returns the authenticated user object
+        const user = response.data;
+       
+        setAuthUser(user);
 
-      // Save user data to local storage for persistent authentication
-      localStorage.setItem('authenticatedUser', JSON.stringify(response.data));
+        // Save user data to local storage for persistent authentication
+        localStorage.setItem('authenticatedUser', JSON.stringify(user));
 
-      // Navigate to the home page or the previous page
-      navigate('/');
+        // Navigate to the home page or the previous page
+        navigate('/');
+       
+        return user;
+      } else {
+        // Handle other response statuses
+        throw new Error('Authentication failed');
+      }
     } catch (error) {
       // Handle authentication errors
       console.error('Authentication failed', error);
+      return null;
     }
   };
 
-  const signOut = () => {
+  const signOutUser = () => {
     // Clear the authenticated user from the context and local storage
-    setAuthenticatedUser(null);
+    setAuthUser(null);
     localStorage.removeItem('authenticatedUser');
 
     // Navigate to the home page
@@ -43,12 +57,12 @@ const UserProvider = ({ children }) => {
   useEffect(() => {
     const storedUser = localStorage.getItem('authenticatedUser');
     if (storedUser) {
-      setAuthenticatedUser(JSON.parse(storedUser));
+      setAuthUser(JSON.parse(storedUser));
     }
   }, []);
 
   return (
-    <UserContext.Provider value={{ authenticatedUser, signIn, signOut }}>
+    <UserContext.Provider value={{ authUser, signIn: signInUser, signOut: signOutUser }}>
       {children}
     </UserContext.Provider>
   );

@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+
+import { api } from '../utilities/apiHelper';
 
 const Courses = () => {
   // State for storing the list of courses
   const [courses, setCourses] = useState([]);
+
+  const navigate = useNavigate()
 
   // Effect hook to fetch the list of courses on component mount
   useEffect(() => {

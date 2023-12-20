@@ -1,32 +1,36 @@
 import React, { useContext } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
 
 const Header = () => {
-  const { user } = { useUser };
+  const location = useLocation();
+  const {authUser} = useUser();
 
   return (
-    <div className="header">
-      <div className="bounds">
-        <Link to="/">
-          <h1 className="header--logo">Courses</h1>
-        </Link>
-        <nav>
-          {user ? (
-            <React.Fragment>
-              <span>Welcome, {user.firstName}!</span>
-              <NavLink to="/signout">Sign Out</NavLink>
-            </React.Fragment>
-          ) : (
-            <React.Fragment>
-              <NavLink to="/signup">Sign Up</NavLink>
-              <NavLink to="/signin">Sign In</NavLink>
-            </React.Fragment>
-          )}
-        </nav>
-      </div>
-    </div>
-  );
-};
+    <header>
+            <div className="wrap header--flex">
+                <h1 className="header--logo"><Link to="/">Courses</Link></h1>
+                <nav>
+                    { authUser ?
+                    <>
+                        <ul className="header--signedin">
+                        <li>Welcome {authUser.firstName} {authUser.lastName}</li>
+                        <li><Link to="/signout">Sign Out</Link></li>
+                        </ul>
+                    </>
+                        :
+                        <>
+                         <ul className="header--signedout">
+                        <li><Link to="/signup">Sign Up</Link></li>
+                        <li><Link to="/signin" state={{from:location.pathname}}> Sign In</Link></li>
+                        </ul>
+                        </>
 
-export default Header;
+                    }
+                   
+                </nav>
+            </div>
+        </header>
+  )
+}
+export default Header
