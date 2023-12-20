@@ -105,7 +105,7 @@ const UpdateCourse = () => {
                 />
               </div>
               <p>
-                By {user ? `${user.firstName} ${user.lastName}` : 'Unknown User'}
+                By {User ? `${User.firstName} ${User.lastName}` : 'Unknown User'}
               </p>
             </div>
             <div className="course--description">
