@@ -5,7 +5,7 @@ import { useUser } from '../context/UserContext';
 import { api } from '../utilities/apiHelper';
 import ErrorsDisplay from './ErrorsDisplay';
 
-const CreateCourse = () => {
+function CreateCourse () {
   const { user } = useUser();
   const navigate = useNavigate();
 

@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams, Link, Navigate, useNavigate } from 'react-router-dom';
-
+import { api } from '../utilities/apiHelper';
 import { useUser } from '../context/UserContext';
 import ErrorsDisplay from './ErrorsDisplay.js';
 
-const CourseDetail = () => {
+
+function CourseDetail () {
   const { user } = useUser ();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -16,25 +17,27 @@ const CourseDetail = () => {
   // Effect hook to fetch the course details on component mount
   useEffect(() => {
     const fetchCourse = async () => {
-      try {
-        const response = await fetch(`http://localhost:5000/api/courses/${id}`);
-        const data = await response.json();
-
-        // If course is not found, navigate to notfound route
-        if (response.status === 404) {
-          navigate('/notfound');
-        } else {
-          setCourse(data);
+        try {
+            const res = await api(`/courses/${id}`, 'GET')
+            const json = await res.json();
+            if (res.status === 200) {
+                setCourse(json);
+            } else if (res.status === 404) {
+                navigate('/notfound');
+            } else {
+                throw new Error();
+            }
+        } catch (error) {
+            console.log("Error fetching and parsing the data", error)
+            navigate('/error');
         }
-      } catch (error) {
-        console.error('Error fetching course details:', error);
-      }
-    };
-
+    }
     fetchCourse();
+}, [id, navigate])
+
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, navigate]);
+ 
 
   // Function to handle course deletion
   const handleDelete = async () => {
