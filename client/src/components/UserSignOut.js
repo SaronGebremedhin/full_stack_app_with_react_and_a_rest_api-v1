@@ -4,10 +4,10 @@ import { Link, Navigate, useLocation } from "react-router-dom";
 
 
 const UserSignOut = () =>{
-    const { actions } = ( useUser) ;
+  const { signOut } = useUser();
 
     useEffect(()=>{
-        actions.signOut();
+        signOut();
     })
     
     return(<Navigate to="/" replace/>)
