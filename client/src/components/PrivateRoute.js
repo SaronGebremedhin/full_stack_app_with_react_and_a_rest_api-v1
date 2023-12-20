@@ -1,19 +1,16 @@
 import React from 'react';
-import { Route, Navigate, Routes } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
 
-const PrivateRoute = ({ element: Element, ...rest }) => {
+const PrivateRoute = () => {
   const { authenticatedUser } = useUser();
+  const location = useLocation();
 
-  return (
-    <Routes>
-      <Route
-        {...rest}
-        path="/*"  // Fix for the error, add a trailing "*"
-        element={authenticatedUser ? <Element /> : <Navigate to="/signin" />}
-      />
-    </Routes>
-  );
+  if(authenticatedUser){
+    return <Outlet />
+} else {
+    return <Navigate to='/SignIn' state={{from: location.pathname }} />
+}
 };
 
 export default PrivateRoute;
