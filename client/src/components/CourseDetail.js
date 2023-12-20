@@ -94,7 +94,7 @@ function CourseDetail () {
             <h4 className="course--label">Course</h4>
             <h3 className="course--title">{course.title}</h3>
             <p>
-              By {course.user ? `${course.user.firstName} ${course.user.lastName}` : 'Unknown User'}
+              By {course.User ? `${course.User.firstName} ${course.User.lastName}` : 'Unknown User'}
             </p>
           </div>
           <div className="course--description">
