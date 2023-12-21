@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { useParams, Link, Navigate, useNavigate } from 'react-router-dom';
 import { api } from '../utilities/apiHelper';
 import { useUser } from '../context/UserContext';
@@ -98,7 +99,7 @@ function CourseDetail () {
             </p>
           </div>
           <div className="course--description">
-            <p>{course.description}</p>
+            <ReactMarkdown>{course.description}</ReactMarkdown>
           </div>
         </div>
         <div className="grid-25 grid-right">
@@ -109,7 +110,7 @@ function CourseDetail () {
                 <h3>{course.estimatedTime || 'N/A'}</h3>
               </li>
               <li className="course--stats--list--item">
-                <h4>Materials Needed</h4>
+                <ReactMarkdown>Materials Needed</ReactMarkdown>
                 <ul>
                   <p>{course.materialsNeeded || 'N/A'}</p>
                 </ul>
