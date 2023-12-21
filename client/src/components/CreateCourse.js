@@ -62,6 +62,7 @@ function CreateCourse () {
   return (
     <div className="bounds course--detail">
       <h1>Create Course</h1>
+      <ErrorsDisplay errors={errors} />
       <div>
         <form onSubmit={handleSubmit}>
           <div className="grid-66">
