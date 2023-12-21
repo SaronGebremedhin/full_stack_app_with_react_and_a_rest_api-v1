@@ -69,58 +69,50 @@ function CourseDetail () {
   };
 
   return (
-    <div>
-      <div className="actions--bar">
-        <div className="bounds">
-          <div className="grid-100">
-            {user && user.id === course.userId && (
-              <span>
-                <Link className="button" to={`/courses/${id}/update`}>
-                  Update Course
-                </Link>
-                <button className="button" onClick={handleDelete}>
-                  Delete Course
-                </button>
-              </span>
-            )}
-            <Link className="button button-secondary" to="/">
-              Return to List
-            </Link>
-          </div>
+    <main>
+    <div className="actions--bar">
+        <div className="wrap">
+            {}
+            {
+                user && user?.id === course?.user?.id ? (
+                    <>
+                        <Link className="button" to={`/courses/${id}/update`}>Update Course</Link>
+                        <button className="button" onClick={handleDelete}>Delete Course</button>
+                    </>
+                ) : (<></>)
+            }
+            <Link className="button button-secondary" to='/'>Return to List</Link>
         </div>
-      </div>
-      <div className="bounds course--detail">
-        <div className="grid-66">
-          <div className="course--header">
-            <h4 className="course--label">Course</h4>
-            <h3 className="course--title">{course.title}</h3>
-            <p>
-              By {course.User ? `${course.User.firstName} ${course.User.lastName}` : 'Unknown User'}
-            </p>
-          </div>
-          <div className="course--description">
-            <ReactMarkdown>{course.description}</ReactMarkdown>
-          </div>
-        </div>
-        <div className="grid-25 grid-right">
-          <div className="course--stats">
-            <ul className="course--stats--list">
-              <li className="course--stats--list--item">
-                <h4>Estimated Time</h4>
-                <h3>{course.estimatedTime || 'N/A'}</h3>
-              </li>
-              <li className="course--stats--list--item">
-                <h4>Materials Needed</h4>
-                <ul>
-                  <ReactMarkdown>{course.materialsNeeded || 'N/A'}</ReactMarkdown>
-                </ul>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
     </div>
-  );
-};
 
-export default CourseDetail;
+    <div className="wrap">
+        <h2>Course Detail</h2>
+        <form>
+            <div className="main--flex">
+                <div>
+                    <h3 className="course--detail--title">Course</h3>
+                    <h4 className="course--name">{course.title}</h4>
+                    <p>{course.User ? `${course.User.firstName} ${course.User.lastName}` : 'Unknown User'}</p>
+
+                    <ReactMarkdown>{course.description}</ReactMarkdown>
+
+                </div>
+                <div>
+                    <h3 className="course--detail--title">Estimated Time</h3>
+                    <p>{course.estimatedTime || 'Ask instructor'}</p>
+
+                    <h3 className="course--detail--title">Materials Needed</h3>
+                    <ul className="course--detail--list">
+
+                        <ReactMarkdown>{course.materialsNeeded}</ReactMarkdown>
+
+                    </ul>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+)
+}
+
+export default CourseDetail
