@@ -88,82 +88,82 @@ const UpdateCourse = () => {
   };
 
   return (
-    <div className="bounds course--detail">
-      <h1>Update Course</h1>
-      <ErrorsDisplay errors={errors} />
-      <div>
-        <form onSubmit={handleSubmit}>
-          <div className="grid-66">
-            <div className="course--header">
-              <h4 className="course--label">Course</h4>
-              <div>
-                <input
-                  id="title"
-                  name="title"
-                  type="text"
-                  placeholder="Course title..."
-                  value={formData.title}
-                  onChange={handleChange}
-                />
-              </div>
-              <p>
-By: {formData.User ? `${formData.User.firstName} ${formData.User.lastName}` : "Unknown User"}              </p>
-            </div>
-            <div className="course--description">
-              <div>
-                <textarea
-                  id="description"
-                  name="description"
-                  placeholder="Course description..."
-                  value={formData.description}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-          </div>
-          <div className="grid-25 grid-right">
-            <div className="course--stats">
-              <ul className="course--stats--list">
-                <li className="course--stats--list--item">
-                  <h4>Estimated Time</h4>
-                  <div>
-                    <input
-                      id="estimatedTime"
-                      name="estimatedTime"
-                      type="text"
-                      placeholder="Hours"
-                      value={formData.estimatedTime}
-                      onChange={handleChange}
-                    />
+      <div className="bounds course--detail">
+          <h1>Update Course</h1>
+          <ErrorsDisplay errors={errors} />
+          <div>
+              <form onSubmit={handleSubmit}>
+                  <div className="grid-66">
+                      <div className="course--header">
+                          <h4 className="course--label">Course</h4>
+                          <div>
+                              <label htmlFor="title">Course Title</label>
+                              <input
+                                  id="title"
+                                  name="title"
+                                  type="text"
+                                  placeholder="Course title..."
+                                  value={formData.title}
+                                  onChange={handleChange}
+                              />
+                          </div>
+                          <p>By {formData.User ? `${formData.User.firstName} ${formData.User.lastName}` : "Unknown User"}</p>
+                      </div>
+                      <div className="course--description">
+                          <div>
+                              <label htmlFor="description">Course Description</label>
+                              <textarea
+                                  id="description"
+                                  name="description"
+                                  placeholder="Course description..."
+                                  value={formData.description}
+                                  onChange={handleChange}
+                              />
+                          </div>
+                      </div>
                   </div>
-                </li>
-                <li className="course--stats--list--item">
-                  <h4>Materials Needed</h4>
-                  <div>
-                    <textarea
-                      id="materialsNeeded"
-                      name="materialsNeeded"
-                      placeholder="List materials..."
-                      value={formData.materialsNeeded}
-                      onChange={handleChange}
-                    />
+                  <div className="grid-25 grid-right">
+                      <div className="course--stats">
+                          <ul className="course--stats--list">
+                              <li className="course--stats--list--item">
+                                  <h4>Estimated Time</h4>
+                                  <div>
+                                      <input
+                                          id="estimatedTime"
+                                          name="estimatedTime"
+                                          type="text"
+                                          placeholder="Hours"
+                                          value={formData.estimatedTime}
+                                          onChange={handleChange}
+                                      />
+                                  </div>
+                              </li>
+                              <li className="course--stats--list--item">
+                                  <h4>Materials Needed</h4>
+                                  <div>
+                                      <textarea
+                                          id="materialsNeeded"
+                                          name="materialsNeeded"
+                                          placeholder="List materials..."
+                                          value={formData.materialsNeeded}
+                                          onChange={handleChange}
+                                      />
+                                  </div>
+                              </li>
+                          </ul>
+                      </div>
                   </div>
-                </li>
-              </ul>
-            </div>
+                  <div className="grid-100 pad-bottom">
+                      <button className="button" type="submit">
+                          Update Course
+                      </button>
+                      <button className="button button-secondary" onClick={handleCancel}>
+                          Cancel
+                      </button>
+                  </div>
+              </form>
           </div>
-          <div className="grid-100 pad-bottom">
-            <button className="button" type="submit">
-              Update Course
-            </button>
-            <button className="button button-secondary" onClick={handleCancel}>
-              Cancel
-            </button>
-          </div>
-        </form>
       </div>
-    </div>
   );
-};
-
+  }
 export default UpdateCourse;
