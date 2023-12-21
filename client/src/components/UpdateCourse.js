@@ -68,7 +68,7 @@ const UpdateCourse = () => {
       } else if (response.status === 400) {
         // If there are validation errors, set the errors state
         const data = await response.json();
-        setErrors(data.errors.errors);
+        setErrors(data.errors);
       } else if (response.status === 403) {
         // If user is not authorized, navigate to forbidden route
         navigate('/forbidden');
