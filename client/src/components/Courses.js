@@ -25,7 +25,7 @@ const Courses = () => {
   }, []);
 
   return (
-    <div className="bounds">
+    <div className="wrap main--grid">
       {courses.map((course) => (
         <div key={course.id} className="grid-33">
           <Link className="course--module course--link" to={`/courses/${course.id}`}>
