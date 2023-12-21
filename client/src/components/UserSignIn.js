@@ -57,11 +57,10 @@ function UserSignIn() {
 
   return (
     <div className="form--centered">
-      <h1>Sign In</h1>
+      <h2> Sign In</h2>
 
-      <div className="Sign In">
         <ErrorsDisplay errors={errors} />
-      </div>
+      
 
       <form onSubmit={handleSubmit}>
         <label htmlFor="emailAddress">Email Address</label>
