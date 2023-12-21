@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { useParams, Link, Navigate, useNavigate } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { api } from '../utilities/apiHelper';
 import { useUser } from '../context/UserContext';
-import ErrorsDisplay from './ErrorsDisplay.js';
+// import ErrorsDisplay from './ErrorsDisplay.js';
 
 
 function CourseDetail () {
@@ -13,7 +13,7 @@ function CourseDetail () {
 
   // State for storing course details and validation errors
   const [course, setCourse] = useState({});
-  const [errors, setErrors] = useState([]);
+  // const [errors, setErrors] = useState([]);
 
   // Effect hook to fetch the course details on component mount
   useEffect(() => {
