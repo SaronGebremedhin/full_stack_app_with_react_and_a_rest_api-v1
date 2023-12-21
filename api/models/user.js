@@ -54,12 +54,13 @@ module.exports = (sequelize) => {
           msg: "Please provide a password",
         },
       },
-      set(value) {
-  if (value) {
-    const hashedPassword = bcryptjs.hashSync(value, 10);
-    this.setDataValue("password", hashedPassword);
-  }
-},
+       set(value) {
+         if (value) {
+        const hashedPassword = bcryptjs.hashSync(value, 10);
+        this.setDataValue("password", hashedPassword);
+      },
+    },
+  });
 
   User.associate = (models) => {
     User.hasMany(models.Course, {
