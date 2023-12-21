@@ -1,6 +1,6 @@
-import { useEffect, useContext } from "react";
+import { useEffect } from "react";
 import { useUser } from "../context/UserContext";
-import { Link, Navigate, useLocation } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 
 const UserSignOut = () =>{
