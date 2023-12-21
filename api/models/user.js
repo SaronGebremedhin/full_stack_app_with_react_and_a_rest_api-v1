@@ -54,10 +54,12 @@ module.exports = (sequelize) => {
           msg: "Please provide a password",
         },
       },
-       set(value) {
+
+    set(value) {
          if (value) {
         const hashedPassword = bcryptjs.hashSync(value, 10);
         this.setDataValue("password", hashedPassword);
+         }
       },
     },
   });
