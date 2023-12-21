@@ -90,6 +90,7 @@ const UpdateCourse = () => {
   return (
     <div className="bounds course--detail">
       <h1>Update Course</h1>
+      <ErrorsDisplay errors={errors} />
       <div>
         <form onSubmit={handleSubmit}>
           <div className="grid-66">
