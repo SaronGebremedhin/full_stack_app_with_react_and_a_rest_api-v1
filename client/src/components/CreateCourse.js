@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useUser } from '../context/UserContext';
-import { api } from '../utilities/apiHelper';
+// import { api } from '../utilities/apiHelper';
 import ErrorsDisplay from './ErrorsDisplay';
 
 function CreateCourse () {
