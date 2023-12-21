@@ -110,9 +110,9 @@ function CourseDetail () {
                 <h3>{course.estimatedTime || 'N/A'}</h3>
               </li>
               <li className="course--stats--list--item">
-                <ReactMarkdown>Materials Needed</ReactMarkdown>
+                <h4>Materials Needed</h4>
                 <ul>
-                  <p>{course.materialsNeeded || 'N/A'}</p>
+                  <ReactMarkdown>{course.materialsNeeded || 'N/A'}</ReactMarkdown>
                 </ul>
               </li>
             </ul>
