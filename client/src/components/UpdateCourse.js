@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
-import { useUser } from '../context/UserContext.js';
+import ErrorsDisplay from "./ErrorsDisplay.js";
+import { useUser } from "../context/UserContext.js";
 
 const UpdateCourse = () => {
   const { authUser: user } = useUser();
