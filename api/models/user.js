@@ -55,11 +55,11 @@ module.exports = (sequelize) => {
         },
       },
       set(value) {
-        const hashedPassword = bcryptjs.hashSync(value, 10);
-        this.setDataValue("password", hashedPassword);
-      },
-    },
-  });
+  if (value) {
+    const hashedPassword = bcryptjs.hashSync(value, 10);
+    this.setDataValue("password", hashedPassword);
+  }
+},
 
   User.associate = (models) => {
     User.hasMany(models.Course, {
